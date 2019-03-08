@@ -1,0 +1,1 @@
+Squid dcker image and k8s deployment to filter egress traffic. 
