@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  sites.whitelist: |+
+    .push.apple.com
+    fcm.googleapis.com
+kind: ConfigMap
+metadata:
+  name: whitelist

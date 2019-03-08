@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    component: squid-proxy
+  name: squid
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: squid-proxy
+    spec:
+      containers:
+      - name: squid
+        image: [image]
+        ports:
+        - containerPort: 3128
+          name: https
+        volumeMounts:
+          - name: "whitelist"
+            mountPath: "/authorized_sites"
+      restartPolicy: Always
+      nodeSelector:
+        dedicated: proxy
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Equal
+        value: proxy
+      volumes:
+      - name: "whitelist"
+        configMap:
+          name: whitelist
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squid
+spec:
+  ports:
+  - port: 3128
+    protocol: TCP
+    targetPort: 3128
+  selector:
+    component: squid-proxy
+  sessionAffinity: None
+  type: ClusterIP
